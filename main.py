@@ -1,4 +1,4 @@
-import web, os
+import web, os, admin
 from urlparse import urlparse
 
 ImagesOnPage = 10
@@ -60,6 +60,7 @@ class add:
 
 class g:
 	def GET(self, page=1):
+		#print admin.app
 		######
 		gallery = list(db.select('gallery'))
 		total = len(gallery)
@@ -72,19 +73,28 @@ class g:
 #===================VARIABLES==========================================
 urls = (
 	'/', 'g',
-	'/page/(.*)', 'g',
+	'/page/(\d+)', 'g',
 	#'/addpic', 'addPicture',
 	'/add', 'add',
 	'/login', 'users.login',
-	'/logout', 'users.logout'
+	'/logout', 'users.logout',
+	'/admin', admin.app,
+	'/stat', 'statistic.show_sessions',
 )
 
 app = web.application(urls, globals())
 if web.config.get('_session') is None:
-    session = web.session.Session(app, web.session.DiskStore('sessions'), {'username': 0, 'loggedin' : 0})
-    web.config._session = session
+	session = web.session.Session(app, web.session.DiskStore('sessions'), initializer = {'username' : None, 'loggedin' : False})
+	web.config._session = session
 else:
-    session = web.config._session
+	session = web.config._session
+
+def session_hook():
+	web.ctx.session = session
+	web.template.Template.globals['session'] = session
+	
+app.add_processor(web.loadhook(session_hook))
+
 render = web.template.render('templates/', globals={'session': session})  
 db = web.database(dbn='mysql', user='webpy', pw='webpy', db='gallery')
 #=======================================================================

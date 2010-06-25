@@ -3,16 +3,21 @@ from hashlib import md5
 #from main import *
 
 urls = (
-	'', 'login',
+	'/login/?', 'login',
+	'/logout/?', 'logout',
+	'/?', 'index'
 )
+
+class index:
+	def GET(self):
+		if not session.loggedin:
+			return web.seeother('/login')
+		else:
+			return "welcome!"
 
 class login:
 	def GET(self):
-		print session
-		if not session.loggedin:
-			return render.login()
-		else:
-			return "WELCOME"
+		return render.login()
 
 	def POST(self):
 		i = web.input()
@@ -24,6 +29,14 @@ class login:
 			return "authorized"
 		else:
 			return 'error'
+
+class logout:
+	def GET(self):
+		if session.loggedin:
+			session.kill()
+			return web.seeother('/')
+		else:
+			return "You're not logged"
 
 
 #===================VARIABLES==========================================

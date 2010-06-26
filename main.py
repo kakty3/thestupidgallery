@@ -92,7 +92,8 @@ class g:
 	def GET(self, page=1):
 		#print delete(54)
 		######
-		gallery = public
+		gallery = list(db.select('images', where="public=$true", vars={'true' : 1}))
+		gallery.reverse()
 		total = len(gallery)
 		pages = len(gallery) / ImagesOnPage
 		page = int(page)
@@ -128,7 +129,7 @@ app.add_processor(web.loadhook(session_hook))
 render = web.template.render('templates/', globals={'session' : session, 'getName' : users.getName})
 web.ctx.render = render
 db = web.database(dbn='mysql', user='webpy', pw='webpy', db='gallery')
-public = list(db.select('images', where="public=$true", vars={'true' : 1}))
+
 #=======================================================================
 
 if __name__ == "__main__":

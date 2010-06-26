@@ -50,6 +50,19 @@ class add:
 		else:
 			return "Please, login to add pictures"
 
+	def POST(self):
+		i = web.input()
+		if i.public == 'on':
+			public = 1
+		else:
+			public = 0
+		#print i.url
+		if validUrl(i.url):
+			n = db.insert('images', url=i.url, name=i.name, public=public, user_id=session.user_id)
+			raise web.seeother('/')
+		else:
+			return 'url is not valid'
+
 class login:
 	def GET(self):
 		return render.login()

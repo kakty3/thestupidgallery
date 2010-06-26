@@ -10,9 +10,16 @@ urls = (
 
 db = web.database(dbn='mysql', user='webpy', pw='webpy', db='gallery')
 
-def addUser(name, password, permission='user'):
-	n = db.insert('users', name=name, password=password, permission=permission)
-	return 'ok'
+#def addUser(name, password, permission='user'):
+	#n = db.insert('users', name=name, password=password, permission=permission)
+	#return 'ok'
+
+def getName(id):
+	check = db.select('users', where="id=$id", vars={'id' : id})
+	if check:
+		return check[0].name
+	else:
+		return 'No user with id=%d' % id
 	
 class login:
 	def GET(self):
@@ -38,3 +45,6 @@ class logout:
 	def GET(self):
 		session.kill()
 		return web.seeother('/')
+
+if __name__ ==  '__main__':
+	print getName(2)

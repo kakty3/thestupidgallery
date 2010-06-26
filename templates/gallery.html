@@ -7,7 +7,7 @@ $def with (gallery, pages, total, ret, page)
 <style type="text/css">
 	body {
 		padding-top: 40px;
-		padding-left: 10%;
+		padding-left: 15%;
 		padding-bottom: 30px;
 	}
 	.page_header {
@@ -82,10 +82,11 @@ $else:
 $if session.loggedin:
 	<a href="/add"><span class="add">add picture</span></a><br>
 
-<!--
+
 $for img in gallery:
 	<div class="$ret(loop.last, 'blockLast', 'block')" id="$loop.index">
-		<div class="text_block">Name: <a href="$img.url" target="_blank"><span class="nameURL">$img.name</span></a></div><br>
+		<div class="text_block">name <a href="$img.url" target="_blank"><span class="nameURL">$img.name</span></a></div><br>
+		<div class="text_block">added by <a href="$img.url" target="_blank"><span class="nameURL">$getName(img.user_id)</span></a></div><br>
 		<div class="big_image"><a href="$img.url" target="_blank"><img src="$img.url" style="max-height: 450px; max-width: 400px"></a></div><br>
 	</div>
 
@@ -99,7 +100,7 @@ $for img in gallery:
 			<a style="color: #BBC008" href="/$ret(loop.first,'','page/%d' % (i + 1))">$(i + 1)</a>
 	$if page != i + 1:
 		<a alt="next page" style="color: #BBC008" href="/page/$(page + 1)">>></a>
--->
+
 	
 </span>
 

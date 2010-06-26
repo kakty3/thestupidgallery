@@ -1,7 +1,8 @@
-import web, os, admin
+import web, os, admin, users
 from urlparse import urlparse
 
 ImagesOnPage = 10
+ImagesDatabaseName = 'images'
 
 #web.config.debug = False
 
@@ -42,7 +43,7 @@ class add:
 			else:
 				#return 'name=%s url=%s' % (name, url)
 				if validUrl(url):
-					n = db.insert('gallery', url=url, name=name)
+					n = db.insert(ImagesDatabaseName, url=url, name=name)
 					return 'name: %s\nurl: %s\nstatus: %s' % (name, url, 'posted')
 				else:
 					return 'url is not valid'
@@ -53,16 +54,17 @@ class add:
 		i = web.input()
 		#print i.url
 		if validUrl(i.url):
-			n = db.insert('gallery', url=i.url, name=i.name, user_id=session.user_id)
+			n = db.insert(ImagesDatabaseName, url=i.url, name=i.name, user_id=session.user_id)
 			raise web.seeother('/')
 		else:
 			return 'url is not valid'
 
 class g:
 	def GET(self, page=1):
+		print users.getName(3)
 		#print admin.app
 		######
-		gallery = list(db.select('gallery'))
+		gallery = list(db.select(ImagesDatabaseName))
 		total = len(gallery)
 		pages = len(gallery) / ImagesOnPage
 		page = int(page)
@@ -95,7 +97,7 @@ def session_hook():
 	
 app.add_processor(web.loadhook(session_hook))
 
-render = web.template.render('templates/', globals={'session': session})  
+render = web.template.render('templates/', globals={'session' : session, 'getName' : users.getName})  
 db = web.database(dbn='mysql', user='webpy', pw='webpy', db='gallery')
 #=======================================================================
 

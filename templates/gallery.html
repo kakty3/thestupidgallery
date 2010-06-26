@@ -7,7 +7,7 @@ $def with (gallery, pages, total, ret, page)
 <style type="text/css">
 	body {
 		padding-top: 40px;
-		padding-left: 200px;
+		padding-left: 10%;
 		padding-bottom: 30px;
 	}
 	.page_header {
@@ -74,9 +74,10 @@ $def with (gallery, pages, total, ret, page)
 
 <body bgcolor=#232323>
 $if session.loggedin:
-	<p style="color:#FFFFFF">You are logged as $session.username | <a href="/logout">log out</a></p>
+	<class style="color:#FFFFFF">You are logged as (<u>username</u> = $session.username, <u>user_id</u> = $session.user_id, <u>permissions</u> = $session.perm) | <a href="/logout">log out</a></class>
 $else:
-	<p style="color:#FFFFFF">You are not logged in | <a href="/login">log in</a></p>	
+	<class style="color:#FFFFFF">You are not logged in | <a href="/login">log in</a></class>
+<class style="color:#FFFFFF">| <a href="/admin">admin panel</a></class><br>
 <a href="/"><span class="page_header">ThesTupIDgaLleRy</span></a>
 $if session.loggedin:
 	<a href="/add"><span class="add">add picture</span></a><br>

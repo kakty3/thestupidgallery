@@ -53,7 +53,7 @@ class add:
 		i = web.input()
 		#print i.url
 		if validUrl(i.url):
-			n = db.insert('gallery', url=i.url, name=i.name)
+			n = db.insert('gallery', url=i.url, name=i.name, user_id=session.user_id)
 			raise web.seeother('/')
 		else:
 			return 'url is not valid'
@@ -84,7 +84,7 @@ urls = (
 
 app = web.application(urls, globals())
 if web.config.get('_session') is None:
-	session = web.session.Session(app, web.session.DiskStore('sessions'), initializer = {'username' : None, 'loggedin' : False})
+	session = web.session.Session(app, web.session.DiskStore('sessions'), initializer = {'username' : None, 'loggedin' : False, 'user_id' : -1, 'perm' : None})
 	web.config._session = session
 else:
 	session = web.config._session

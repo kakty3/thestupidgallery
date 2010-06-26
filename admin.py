@@ -17,7 +17,10 @@ class index:
 
 class login:
 	def GET(self):
-		return render.login()
+		if not session.loggedin:
+			return render.login()
+		else:
+			return web.seeother('/')
 
 	def POST(self):
 		i = web.input()

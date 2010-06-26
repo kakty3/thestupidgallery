@@ -22,10 +22,14 @@ class login:
 	def POST(self):
 		i = web.input()
 		pswd = md5(i.password).hexdigest()
-		check = db.select('users', where="name=$n AND password=$pswd",vars={'n' : i.username, 'pswd' : pswd})
-		if check: 
+		check = db.select('users', where="name=$n AND password=$pswd", vars={'n' : i.username, 'pswd' : pswd})
+		if check:
+			#print "Check.perm: %s" % check[0].password
+			user = check[0]
 			session.loggedin = True
-			session.username = i.username
+			session.username = user.name
+			session.user_id = user.id
+			session.perm = user.permission
 			return web.seeother('/')
 		else:
 			return 'error'

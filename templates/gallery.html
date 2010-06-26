@@ -31,7 +31,9 @@ $def with (gallery, pages, total, ret, page)
 		width: 45%;
 	}
 	.big_image {
+<!--
 		margin-bottom: 20px;
+-->
 	}
 	.text_block {
 		font-size: 13px;
@@ -74,7 +76,7 @@ $def with (gallery, pages, total, ret, page)
 
 <body bgcolor=#232323>
 $if session.loggedin:
-	<class style="color:#FFFFFF">You are logged as (<u>username</u> = $session.username, <u>user_id</u> = $session.user_id, <u>permissions</u> = $session.perm) | <a href="/logout">log out</a></class>
+	<class style="color:#FFFFFF">You are logged as (<u>username</u> = $session.username, <u>user_id</u> = $session.user_id, <u>permissions</u> = $session.permission) | <a href="/logout">log out</a></class>
 $else:
 	<class style="color:#FFFFFF">You are not logged in | <a href="/login">log in</a></class>
 <class style="color:#FFFFFF">| <a href="/admin">admin panel</a></class><br>
@@ -87,11 +89,13 @@ $for img in gallery:
 	<div class="$ret(loop.last, 'blockLast', 'block')" id="$loop.index">
 	
 		<div class="text_block">name <a href="$img.url" target="_blank"><span class="nameURL">$img.name</span></a></div><br>
-		<div class="text_block">added by <a href="$img.url" target="_blank"><span class="nameURL">$getName(img.user_id)</span></a></div><br>
 
 		<div class="big_image"><a href="$img.url" target="_blank"><img src="$img.url" style="max-height: 450px; max-width: 400px"></a></div><br>
 
-		<a href="">
+		<div class="text_block">added by <class style="font-size:150%; font-family: Tahoma;">$getName(img.user_id)</class></div><br>
+		$if session.permission == 'admin':
+			<a href="dfd">delete</a>
+		</br>
 	</div>
 
 <span class="page-nav">

@@ -57,17 +57,15 @@ class login:
 	def POST(self):
 		users.login(web.input())
 
+def delete(id):
+	if db.delete('images', where="id=$id", vars={'id' : id}):
+		return "image id=%d deleted" % id
+	else:
+		return "no images with that id"
 
 class logout:
 	def GET(self):
 		users.logout()
-
-def delete(id):
-	check = db.delete('images', where="id=$id", vars={'id' : id})
-	#if check:
-		#return check[0].name
-	#else:
-		#return 'No user with id=%d' % id
 
 	def POST(self):
 		i = web.input()
@@ -80,10 +78,9 @@ def delete(id):
 
 class g:
 	def GET(self, page=1):
-		delete(111111)
-		#print admin.app
+		#print delete(54)
 		######
-		gallery = list(db.select(ImagesDatabaseName))
+		gallery = public
 		total = len(gallery)
 		pages = len(gallery) / ImagesOnPage
 		page = int(page)
@@ -105,7 +102,7 @@ urls = (
 
 app = web.application(urls, globals())
 if web.config.get('_session') is None:
-	session = web.session.Session(app, web.session.DiskStore('sessions'), initializer = {'username' : None, 'loggedin' : False, 'user_id' : -1, 'perm' : None})
+	session = web.session.Session(app, web.session.DiskStore('sessions'), initializer = {'username' : None, 'loggedin' : False, 'user_id' : -1, 'permission' : 0})
 	web.config._session = session
 else:
 	session = web.config._session
@@ -119,6 +116,7 @@ app.add_processor(web.loadhook(session_hook))
 render = web.template.render('templates/', globals={'session' : session, 'getName' : users.getName})
 web.ctx.render = render
 db = web.database(dbn='mysql', user='webpy', pw='webpy', db='gallery')
+public = list(db.select('images', where="public=$true", vars={'true' : 1}))
 #=======================================================================
 
 if __name__ == "__main__":

@@ -92,10 +92,7 @@ $for img in gallery:
 
 		<div class="big_image"><a href="$img.url" target="_blank"><img src="$img.url" style="max-height: 450px; max-width: 400px"></a></div><br>
 
-		<div class="text_block">added by <class style="font-size:150%; font-family: Tahoma;">$getName(img.user_id)</class></div><br>
-		$if session.permission == 'admin':
-			<a href="dfd">delete</a>
-		</br>
+		<div class="text_block">added by <class style="font-size:150%; font-family: Tahoma;">$getName(img.user_id)</class>, $img.created.strftime("%B %d at %H:%M")</div><br>
 	</div>
 
 <span class="page-nav">

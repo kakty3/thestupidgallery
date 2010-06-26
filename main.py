@@ -56,7 +56,6 @@ class add:
 			public = 1
 		else:
 			public = 0
-		#print i.url
 		if validUrl(i.url):
 			n = db.insert('images', url=i.url, name=i.name, public=public, user_id=session.user_id)
 			raise web.seeother('/')

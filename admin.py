@@ -1,6 +1,5 @@
 import web
 from hashlib import md5
-#from main import *
 
 urls = (
 	'/login/?', 'login',

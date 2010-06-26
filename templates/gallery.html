@@ -85,9 +85,13 @@ $if session.loggedin:
 
 $for img in gallery:
 	<div class="$ret(loop.last, 'blockLast', 'block')" id="$loop.index">
+	
 		<div class="text_block">name <a href="$img.url" target="_blank"><span class="nameURL">$img.name</span></a></div><br>
 		<div class="text_block">added by <a href="$img.url" target="_blank"><span class="nameURL">$getName(img.user_id)</span></a></div><br>
+
 		<div class="big_image"><a href="$img.url" target="_blank"><img src="$img.url" style="max-height: 450px; max-width: 400px"></a></div><br>
+
+		<a href="">
 	</div>
 
 <span class="page-nav">

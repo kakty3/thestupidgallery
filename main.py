@@ -50,6 +50,25 @@ class add:
 		else:
 			return "Please, login to add pictures"
 
+class login:
+	def GET(self):
+		return render.login()
+
+	def POST(self):
+		users.login(web.input())
+
+
+class logout:
+	def GET(self):
+		users.logout()
+
+def delete(id):
+	check = db.delete('images', where="id=$id", vars={'id' : id})
+	#if check:
+		#return check[0].name
+	#else:
+		#return 'No user with id=%d' % id
+
 	def POST(self):
 		i = web.input()
 		#print i.url
@@ -61,7 +80,7 @@ class add:
 
 class g:
 	def GET(self, page=1):
-		print users.getName(3)
+		delete(111111)
 		#print admin.app
 		######
 		gallery = list(db.select(ImagesDatabaseName))
@@ -78,8 +97,8 @@ urls = (
 	'/page/(\d+)', 'g',
 	#'/addpic', 'addPicture',
 	'/add', 'add',
-	'/login', 'users.login',
-	'/logout', 'users.logout',
+	'/login', 'login',
+	'/logout', 'logout',
 	'/admin', admin.app,
 	'/stat', 'statistic.show_sessions',
 )
@@ -97,7 +116,8 @@ def session_hook():
 	
 app.add_processor(web.loadhook(session_hook))
 
-render = web.template.render('templates/', globals={'session' : session, 'getName' : users.getName})  
+render = web.template.render('templates/', globals={'session' : session, 'getName' : users.getName})
+web.ctx.render = render
 db = web.database(dbn='mysql', user='webpy', pw='webpy', db='gallery')
 #=======================================================================
 

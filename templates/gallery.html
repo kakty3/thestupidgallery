@@ -42,6 +42,7 @@ $def with (gallery, pages, total, ret, page)
 	}
 	a {
 		text-decoration: none;
+		color: #FAE86F;
 	}
 	.nameURL {
 		font-size: 13px;
@@ -76,10 +77,11 @@ $def with (gallery, pages, total, ret, page)
 
 <body bgcolor=#232323>
 $if session.loggedin:
-	<class style="color:#FFFFFF">You are logged as (<u>username</u> = $session.username, <u>user_id</u> = $session.user_id, <u>permissions</u> = $session.permission) | <a href="/logout">log out</a></class>
+	<class style="color:#FFFFFF; font-family: Arial">You are logged as (<u>username</u> = $session.username, <u>user_id</u> = $session.user_id, <u>permissions</u> = $session.permission) | <a href="/logout">Log out</a></class>
 $else:
-	<class style="color:#FFFFFF">You are not logged in | <a href="/login">log in</a></class>
-<class style="color:#FFFFFF">| <a href="/admin">admin panel</a></class><br>
+	<class style="color:#FFFFFF; font-family: Arial">You are not logged in | <a href="/login">Log in</a> | <a href="/register">Sign up</a></class>
+<class style="color:#FFFFFF">| <a href="/admin">Admin Panel</a></class><br>
+<hr color="#FFFFFF" size="1" noshade>
 <a href="/"><span class="page_header">ThesTupIDgaLleRy</span></a>
 $if session.loggedin:
 	<a href="/add"><span class="add">add picture</span></a><br>

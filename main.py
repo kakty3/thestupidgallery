@@ -64,10 +64,28 @@ class add:
 
 class login:
 	def GET(self):
-		return render.login()
+		if not session.loggedin:
+			return render.login()
+		else:
+			return render.message("Warning", "You are allready logged in")
 
 	def POST(self):
-		users.login(web.input())
+		if users.login(web.input()):
+			return render.message("Error", "Username or password was incorrect")#, 'try to login again', '/login')
+
+class register:
+	def GET(self):
+		if not session.loggedin:
+			return render.register()
+		else:
+			return render.message("Warning", "Please, log out to register")#, 'try to login again', '/login')
+
+	def POST(self):
+		i = web.input()
+		print i
+		if users.addUser(i.username, i.password):
+			return render.message("Error", "Can't register", 'try again', '/register')
+		return render.message("Welcome", "Your registration is succesful")
 
 def delete(id):
 	if db.delete('images', where="id=$id", vars={'id' : id}):
@@ -79,21 +97,11 @@ class logout:
 	def GET(self):
 		users.logout()
 
-	def POST(self):
-		i = web.input()
-		#print i.url
-		if validUrl(i.url):
-			n = db.insert(ImagesDatabaseName, url=i.url, name=i.name, user_id=session.user_id)
-			raise web.seeother('/')
-		else:
-			return 'url is not valid'
-
 class g:
 	def GET(self, page=1):
 		#print delete(54)
 		######
-		gallery = list(db.select('images', where="public=$true", vars={'true' : 1}))
-		gallery.reverse()
+		gallery = list(db.select('images', order="created DESC", where="public=$true", vars={'true' : 1}))
 		total = len(gallery)
 		pages = len(gallery) / ImagesOnPage
 		page = int(page)
@@ -105,12 +113,11 @@ class g:
 urls = (
 	'/', 'g',
 	'/page/(\d+)', 'g',
-	#'/addpic', 'addPicture',
 	'/add', 'add',
 	'/login', 'login',
 	'/logout', 'logout',
 	'/admin', admin.app,
-	'/stat', 'statistic.show_sessions',
+	'/register', 'register',
 )
 
 app = web.application(urls, globals())

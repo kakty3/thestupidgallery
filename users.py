@@ -28,9 +28,9 @@ def login(i):
 		session.username = user.name
 		session.user_id = user.id
 		session.permission = user.permission
-		return web.seeother('/')
+		return 0
 	else:
-		return 1
+		return "Password or username is incorrect"
 
 def logout():
 	session = web.ctx.session

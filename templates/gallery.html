@@ -28,6 +28,7 @@ $def with (gallery, pages, total, ret, page)
 	}
 	.blockLast {
 		margin-bottom: 50px;
+		padding-left: 10px;
 		width: 45%;
 	}
 	.big_image {
@@ -47,19 +48,19 @@ $def with (gallery, pages, total, ret, page)
 	.nameURL {
 		font-size: 13px;
 		font-family: Georgia;
-		color: #711FB5;
+		color: #F2E65F;
 	}
 	.nameURL:hover {
-		color: #5A0C96;
+		color: #DDCB10;
 	}
 	.page-nav {
 		border-top: 1px solid #A1A1A1;
 		padding: 4px;
 		padding-left: 10px;
 		padding-right: 10px;
-		font-size: 23px;
+		font-size: 20px;
 		background-color: #353535;
-		color: #BBC008;
+		color: #FFE351;
 		font-family: Tahoma;
 	}
 	.add {
@@ -69,7 +70,7 @@ $def with (gallery, pages, total, ret, page)
 		font-family: Arial;
 	}
 	.add:hover {
-		color: #89C67C;
+		color: #F2ED84;
 		border-bottom: 1px solid;
 	}
 </style>
@@ -77,7 +78,7 @@ $def with (gallery, pages, total, ret, page)
 
 <body bgcolor=#232323>
 $if session.loggedin:
-	<class style="color:#FFFFFF; font-family: Arial">You are logged as (<u>username</u> = $session.username, <u>user_id</u> = $session.user_id, <u>permissions</u> = $session.permission) | <a href="/logout">Log out</a></class>
+	<class style="color:#FFFFFF; font-family: Arial">You are logged as <font color="#B08A21">$session.username</font> <!-- (<u>username</u> = $session.username, <u>user_id</u> = $session.user_id, <u>permissions</u> = $session.permission)--> | <a href="/logout">Log out</a></class>
 $else:
 	<class style="color:#FFFFFF; font-family: Arial">You are not logged in | <a href="/login">Log in</a> | <a href="/register">Sign up</a></class>
 <class style="color:#FFFFFF">| <a href="/admin">Admin Panel</a></class><br>
@@ -99,14 +100,14 @@ $for img in gallery:
 
 <span class="page-nav">
 	$if page != 1:
-		<a style="color: #BBC008" href="/page/$(page - 1)"><<</a>
+		<a href="/page/$(page - 1)"><<</a>
 	$for i in range(pages):
 		$if i + 1 == page:
-			<span style="font-size: 130%; color: #FF1813">$(i + 1)</span>
+			<span style="font-size: 130%; color: #B08A21">$(i + 1)</span>
 		$else:
-			<a style="color: #BBC008" href="/$ret(loop.first,'','page/%d' % (i + 1))">$(i + 1)</a>
+			<a href="/$ret(loop.first,'','page/%d' % (i + 1))">$(i + 1)</a>
 	$if page != i + 1:
-		<a alt="next page" style="color: #BBC008" href="/page/$(page + 1)">>></a>
+		<a alt="next page"  href="/page/$(page + 1)">>></a>
 
 	
 </span>

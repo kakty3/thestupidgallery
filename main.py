@@ -43,10 +43,15 @@ class add:
 			else:
 				#return 'name=%s url=%s' % (name, url)
 				if validUrl(url):
-					n = db.insert(ImagesDatabaseName, url=url, name=name)
-					return 'name: %s\nurl: %s\nstatus: %s' % (name, url, 'posted')
+					print '=' * 30
+					print 'name \"%s\"' % name
+					if name:
+						n = db.insert(ImagesDatabaseName, url=url, name=name)
+						return 'name: %s\nurl: %s\nstatus: %s' % (name, url, 'posted')
+					else:
+						return render.message("Error", "Trying to add picture without name", "try again", "/add") 
 				else:
-					return 'url is not valid'
+					return render.message("Error", "Url is not valid", "try again", "/add") 
 		else:
 			return "Please, login to add pictures"
 
@@ -56,11 +61,17 @@ class add:
 			public = 1
 		else:
 			public = 0
-		if validUrl(i.url):
-			n = db.insert('images', url=i.url, name=i.name, public=public, user_id=session.user_id)
-			raise web.seeother('/')
+		url = i.url
+		name  = i.name
+		print 'name \'%s\'' % name
+		if validUrl(url):
+			if name:
+				n = db.insert('images', url=i.url, name=i.name, public=public, user_id=session.user_id)
+				return render.message("Well done", "Picture was succesfully added") 
+			else:
+				return render.message("Error", "Trying to add picture without name", "try again", "/add") 
 		else:
-			return 'url is not valid'
+			return render.message("Error", "Url is not valid", "try again", "/add") 
 
 class login:
 	def GET(self):
@@ -70,8 +81,11 @@ class login:
 			return render.message("Warning", "You are allready logged in")
 
 	def POST(self):
-		if users.login(web.input()):
-			return render.message("Error", "Username or password was incorrect")#, 'try to login again', '/login')
+		feedback = users.login(web.input())
+		if feedback == 0:
+			return render.message("Well done", "You were successfully loged in")
+		else:
+			return render.message("Error", feedback)#, 'try to login again', '/login')
 
 class register:
 	def GET(self):
@@ -122,7 +136,7 @@ urls = (
 
 app = web.application(urls, globals())
 if web.config.get('_session') is None:
-	session = web.session.Session(app, web.session.DiskStore('sessions'), initializer = {'username' : None, 'loggedin' : False, 'user_id' : -1, 'permission' : 0})
+	session = web.session.Session(app, web.session.DiskStore('sessions'), initializer = {'username': None, 'loggedin': False, 'user_id': -1, 'permission': 0})
 	web.config._session = session
 else:
 	session = web.config._session
@@ -133,7 +147,7 @@ def session_hook():
 	
 app.add_processor(web.loadhook(session_hook))
 
-render = web.template.render('templates/', globals={'session' : session, 'getName' : users.getName})
+render = web.template.render('templates/', globals={'session': session, 'getName': users.getName})
 web.ctx.render = render
 db = web.database(dbn='mysql', user='webpy', pw='webpy', db='gallery')
 

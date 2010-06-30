@@ -111,22 +111,30 @@ class logout:
 	def GET(self):
 		users.logout()
 
-class g:
+class show:
 	def GET(self, page=1):
 		#print delete(54)
+		print 'Request from ip %s, page %s' % (web.ctx.ip, page)
 		######
-		gallery = list(db.select('images', order="created DESC", where="public=$true", vars={'true' : 1}))
+		path = web.ctx.path
+		print path.split('/')[1]
+		if path and path.split('/')[1] == 'all':
+			gallery = list(db.select('images', order="created DESC"))
+		else:
+			gallery = list(db.select('images', order="created DESC", where="public=$true", vars={'true' : 1}))
 		total = len(gallery)
 		pages = len(gallery) / ImagesOnPage
 		page = int(page)
 		if len(gallery) % ImagesOnPage:
 			pages += 1
-		return render.gallery(gallery[(page - 1) * ImagesOnPage:page * ImagesOnPage], pages, total, ret, page)
+		return render.gallery(gallery[(page - 1) * ImagesOnPage:page * ImagesOnPage], pages, total, ret, page, path.split('/')[1])
 
 #===================VARIABLES==========================================
 urls = (
-	'/', 'g',
-	'/page/(\d+)', 'g',
+	'/', 'show',
+	'/page/(\d+)', 'show',
+	'/all', 'show',
+	'/all/page/(\d+)', 'show',
 	'/add', 'add',
 	'/login', 'login',
 	'/logout', 'logout',

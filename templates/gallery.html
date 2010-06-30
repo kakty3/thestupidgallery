@@ -1,4 +1,4 @@
-$def with (gallery, pages, total, ret, page)
+$def with (gallery, pages, total, ret, page, show="")
 
 <html>
 <head>
@@ -12,7 +12,7 @@ $def with (gallery, pages, total, ret, page)
 	}
 	.page_header {
 		margin-bottom: 45px;
-		font-size: 55px;
+		font-size: 40px;
 		font-family: Georgia;
 		width: 75%;
 		color: #FFFFFF;
@@ -73,6 +73,7 @@ $def with (gallery, pages, total, ret, page)
 		color: #F2ED84;
 		border-bottom: 1px solid;
 	}
+
 </style>
 </head>
 
@@ -87,6 +88,12 @@ $else:
 $if session.loggedin:
 	<a href="/add"><span class="add">add picture</span></a><br>
 
+$if session.username != 'kakty3' and session.username != 'root':
+	<br><class style="color:#FFFFFF; ">Товарищи, давайте не постить хуйни на главную.
+	Когда добаляете картинку, убирайте галку с Public. Скоро доделаю личную страничку и там вы сполна насладитесь своими картинками.
+	Также скоро приделаю рейтинг, чтобы можно было если чо убрать картинку с главной, или наоборот, поставить на главную (как на хабре).
+	Если чо, то ваши картинки я не удаляю, а просто убираю их с главной. Скоро все будет. А пока терпите. И не постите хуйню!
+
 
 $for img in gallery:
 	<div class="$ret(loop.last, 'blockLast', 'block')" id="$loop.index">
@@ -100,14 +107,14 @@ $for img in gallery:
 
 <span class="page-nav">
 	$if page != 1:
-		<a href="/page/$(page - 1)"><<</a>
+		<a href="$ret(show=='all','/all', '')/page/$(page - 1)"><<</a>
 	$for i in range(pages):
 		$if i + 1 == page:
 			<span style="font-size: 130%; color: #B08A21">$(i + 1)</span>
 		$else:
-			<a href="/$ret(loop.first,'','page/%d' % (i + 1))">$(i + 1)</a>
+			<a href="$ret(show=='all','/all', '')/$ret(loop.first,'','page/%d' % (i + 1))">$(i + 1)</a>
 	$if page != i + 1:
-		<a alt="next page"  href="/page/$(page + 1)">>></a>
+		<a alt="next page"  href="$ret(show=='all','/all', '')/page/$(page + 1)">>></a>
 
 	
 </span>

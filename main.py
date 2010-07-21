@@ -11,7 +11,7 @@ def ret(a, b, c):
 		return b
 	else:
 		return c
-		
+
 class index:
 	def GET(self):
 		return render.index()
@@ -28,17 +28,19 @@ def validUrl(url):
 			return 1
 	else:
 		return 0
-		
+
 class add:
 	def GET(self):
 		if session.loggedin:
 			i = web.input()
+			print i
 			if not i:
 				return render.add()
 			try:
-				name = i.n
+				name = i.t
 				url = i.u
 			except AttributeError:
+				#print 'ololo'
 				return 'Bad request'
 			else:
 				#return 'name=%s url=%s' % (name, url)
@@ -46,32 +48,35 @@ class add:
 					print '=' * 30
 					print 'name \"%s\"' % name
 					if name:
-						n = db.insert(ImagesDatabaseName, url=url, name=name)
+						n = db.insert('images', url=url, name=name, public=1, user_id=session.user_id)
 						return 'name: %s\nurl: %s\nstatus: %s' % (name, url, 'posted')
 					else:
-						return render.message("Error", "Trying to add picture without name", "try again", "/add") 
+						return render.message("Error", "Trying to add picture without name", "try again", "/add")
 				else:
-					return render.message("Error", "Url is not valid", "try again", "/add") 
+					return render.message("Error", "Url is not valid", "try again", "/add")
 		else:
 			return "Please, login to add pictures"
 
 	def POST(self):
 		i = web.input()
-		if i.public == 'on':
-			public = 1
-		else:
+		#print i
+		try:
+			i.public
+		except:
 			public = 0
+		else:
+			public = 1
 		url = i.url
 		name  = i.name
 		print 'name \'%s\'' % name
 		if validUrl(url):
 			if name:
 				n = db.insert('images', url=i.url, name=i.name, public=public, user_id=session.user_id)
-				return render.message("Well done", "Picture was succesfully added") 
+				return render.message("Well done", "Picture was succesfully added")
 			else:
-				return render.message("Error", "Trying to add picture without name", "try again", "/add") 
+				return render.message("Error", "Trying to add picture without name", "try again", "/add")
 		else:
-			return render.message("Error", "Url is not valid", "try again", "/add") 
+			return render.message("Error", "Url is not valid", "try again", "/add")
 
 class login:
 	def GET(self):
@@ -101,6 +106,17 @@ class register:
 			return render.message("Error", "Can't register", 'try again', '/register')
 		return render.message("Welcome", "Your registration is succesful")
 
+class test:
+	def GET(self):
+		i = web.input()
+		#print i
+		try:
+			u = i['u']
+		except:
+			pass
+		else:
+			print u
+
 def delete(id):
 	if db.delete('images', where="id=$id", vars={'id' : id}):
 		return "image id=%d deleted" % id
@@ -114,7 +130,7 @@ class logout:
 class show:
 	def GET(self, page=1):
 		#print delete(54)
-		print 'Request from ip %s, page %s' % (web.ctx.ip, page)
+		print 'Request from ip %s page %s' % (web.ctx.ip, page)
 		######
 		path = web.ctx.path
 		print path.split('/')[1]
@@ -140,6 +156,8 @@ urls = (
 	'/logout', 'logout',
 	'/admin', admin.app,
 	'/register', 'register',
+	'/user/(.*)', 'show',
+	'/test', 'test',
 )
 
 app = web.application(urls, globals())
@@ -152,7 +170,7 @@ else:
 def session_hook():
 	web.ctx.session = session
 	web.template.Template.globals['session'] = session
-	
+
 app.add_processor(web.loadhook(session_hook))
 
 render = web.template.render('templates/', globals={'session': session, 'getName': users.getName})

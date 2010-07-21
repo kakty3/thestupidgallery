@@ -87,12 +87,15 @@ $else:
 <a href="/"><span class="page_header">ThesTupIDgaLleRy</span></a>
 $if session.loggedin:
 	<a href="/add"><span class="add">add picture</span></a><br>
+<span><a href="/">best</a> | <a href="/all">all</a></span>
 
+<!--
 $if session.username != 'kakty3' and session.username != 'root':
 	<br><class style="color:#FFFFFF; ">Товарищи, давайте не постить хуйни на главную.
 	Когда добаляете картинку, убирайте галку с Public. Скоро доделаю личную страничку и там вы сполна насладитесь своими картинками.
 	Также скоро приделаю рейтинг, чтобы можно было если чо убрать картинку с главной, или наоборот, поставить на главную (как на хабре).
-	Если чо, то ваши картинки я не удаляю, а просто убираю их с главной. Скоро все будет. А пока терпите. И не постите хуйню!
+	Если чо, то ваши картинки я не удаляю, а просто убираю их с главной. Скоро все будет. А пока терпите. И не постите хуйню!</class>
+-->
 
 
 $for img in gallery:
@@ -112,7 +115,7 @@ $for img in gallery:
 		$if i + 1 == page:
 			<span style="font-size: 130%; color: #B08A21">$(i + 1)</span>
 		$else:
-			<a href="$ret(show=='all','/all', '')/$ret(loop.first,'','page/%d' % (i + 1))">$(i + 1)</a>
+			<a href="$ret(show=='all','/all', '/')$ret(loop.first,'','page/%d' % (i + 1))">$(i + 1)</a>
 	$if page != i + 1:
 		<a alt="next page"  href="$ret(show=='all','/all', '')/page/$(page + 1)">>></a>
 
